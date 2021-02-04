@@ -23,8 +23,9 @@ function generatePalette() {
 
 function populateChart(data) {
   let durations = data.map(({ totalDuration }) => totalDuration);
-  let pounds = calculateTotalWeight(data);
-  let workouts = workoutNames(data);
+  let pounds = calculateTotalPounds(data);
+  let exercises = getExerciseNames(data);
+  let totalWeightsMap = totalCombinedWeights(exercises, pounds)
   const colors = generatePalette();
 
   let line = document.querySelector('#canvas').getContext('2d');
@@ -135,7 +136,7 @@ function populateChart(data) {
   let pieChart = new Chart(pie, {
     type: 'pie',
     data: {
-      labels: workouts,
+      labels: exercises,
       datasets: [
         {
           label: 'Exercises Performed',
@@ -155,12 +156,12 @@ function populateChart(data) {
   let donutChart = new Chart(pie2, {
     type: 'doughnut',
     data: {
-      labels: workouts,
+      labels: [...totalWeightsMap.keys()], // weights
       datasets: [
         {
           label: 'Exercises Performed',
           backgroundColor: colors,
-          data: pounds,
+          data: [...totalWeightsMap.values()], // pounds
         },
       ],
     },
@@ -173,7 +174,7 @@ function populateChart(data) {
   });
 }
 
-function calculateTotalWeight(data) {
+function calculateTotalPounds(data) {
   let totals = [];
 
   data.forEach((workout) => {
@@ -191,17 +192,36 @@ function calculateTotalWeight(data) {
   return totals;
 }
 
-function workoutNames(data) {
-  let workouts = [];
+function getExerciseNames(data) {
+  let exercises = [];
 
   data.forEach((workout) => {
     workout.exercises.forEach((exercise) => {
-      workouts.push(exercise.name);
+      exercises.push(exercise.name);
     });
   });
 
-  // return de-duplicated array with JavaScript `Set` object
-  return [...new Set(workouts)];
+  return exercises;
+}
+
+function totalCombinedWeights(exercises, weights) {
+  let weightMap = new Map()
+
+  for (i = 0; i < exercises.length; i++) {
+    const name = exercises[i]
+    const currWt = weights[i]
+
+    if (weightMap.has(name)) {
+      weightMap.set(name, weightMap.get(name) + currWt) // Update total weight
+    }
+    else weightMap.set(name, currWt)
+  }
+  // Filter out entries with no weight, sort slphabetically, and return new map
+  return new Map(
+    [...weightMap.entries()]
+      .filter(e => e[1] !== 0)
+      .sort()
+  )
 }
 
 // get all workout data from back-end
