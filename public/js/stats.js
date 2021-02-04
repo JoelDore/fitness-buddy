@@ -156,7 +156,7 @@ function populateChart(data) {
   let donutChart = new Chart(pie2, {
     type: 'doughnut',
     data: {
-      labels: [...totalWeightsMap.keys()], // weights
+      labels: [...totalWeightsMap.keys()], // exercise names
       datasets: [
         {
           label: 'Exercises Performed',
