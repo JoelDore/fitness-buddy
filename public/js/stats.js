@@ -25,6 +25,7 @@ function populateChart(data) {
   let durations = data.map(({ totalDuration }) => totalDuration);
   let pounds = calculateTotalPounds(data);
   let exercises = getExerciseNames(data);
+  let totalDurationsMap = totalCombinedDurations(exercises, durations)
   let totalWeightsMap = totalCombinedWeights(exercises, pounds)
   const colors = generatePalette();
 
@@ -136,12 +137,12 @@ function populateChart(data) {
   let pieChart = new Chart(pie, {
     type: 'pie',
     data: {
-      labels: exercises,
+      labels: [...totalDurationsMap.keys()], // exercise names
       datasets: [
         {
           label: 'Exercises Performed',
           backgroundColor: colors,
-          data: durations,
+          data: [...totalDurationsMap.values()], // durations
         },
       ],
     },
@@ -202,6 +203,24 @@ function getExerciseNames(data) {
   });
 
   return exercises;
+}
+
+function totalCombinedDurations(exercises, durations) {
+  let durationMap = new Map()
+
+  for (i = 0; i < exercises.length; i++) {
+    const name = exercises[i]
+    const currDuration = durations[i]
+
+    if (durationMap.has(name)) {
+      durationMap.set(name, durationMap.get(name) + currDuration) // Update total duration
+    }
+    else durationMap.set(name, currDuration)
+  }
+  // Return new map sorted alphabetically
+  return new Map(
+    [...durationMap.entries()].sort()
+  )
 }
 
 function totalCombinedWeights(exercises, weights) {
