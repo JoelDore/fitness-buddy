@@ -22,7 +22,15 @@ router.post('/workouts', (req, res) => {
 })
 
 router.get('/workouts/range', (req, res) => {
-
+    setTotalDurations()
+        .then(() => db.Workout.find({}).sort("-day").limit(7))
+        .then(data => {
+            console.log(data.length, "records found!")
+            res.json(data)
+        })
+        .catch(err => {
+            res.json(err)
+        })
 })
 
 const setTotalDurations = () => {
