@@ -25,8 +25,8 @@ function populateChart(data) {
   let durations = data.map(({ totalDuration }) => totalDuration);
   let pounds = calculateTotalPounds(data);
   let exercises = getExerciseNames(data);
-  let totalDurationsMap = totalCombinedDurations(exercises, durations)
-  let totalWeightsMap = totalCombinedWeights(exercises, pounds)
+  let totalDurationsMap = getTotalsMap(exercises, durations)
+  let totalWeightsMap = getTotalsMap(exercises, pounds)
   const colors = generatePalette();
 
   let line = document.querySelector('#canvas').getContext('2d');
@@ -205,41 +205,21 @@ function getExerciseNames(data) {
   return exercises;
 }
 
-function totalCombinedDurations(exercises, durations) {
-  let durationMap = new Map()
+function getTotalsMap(exercises, values) {
+  let valueMap = new Map()
 
   for (i = 0; i < exercises.length; i++) {
     const name = exercises[i]
-    const currDuration = durations[i]
+    const currVal = values[i]
 
-    if (durationMap.has(name)) {
-      durationMap.set(name, durationMap.get(name) + currDuration) // Update total duration
+    if (valueMap.has(name)) {
+      valueMap.set(name, valueMap.get(name) + currVal) // Update total value
     }
-    else durationMap.set(name, currDuration)
+    else valueMap.set(name, currVal)
   }
-  // Return new map sorted alphabetically
+  // Return new map sorted alphabetically, filtering out non-zero values
   return new Map(
-    [...durationMap.entries()].sort()
-  )
-}
-
-function totalCombinedWeights(exercises, weights) {
-  let weightMap = new Map()
-
-  for (i = 0; i < exercises.length; i++) {
-    const name = exercises[i]
-    const currWt = weights[i]
-
-    if (weightMap.has(name)) {
-      weightMap.set(name, weightMap.get(name) + currWt) // Update total weight
-    }
-    else weightMap.set(name, currWt)
-  }
-  // Filter out entries with no weight, sort slphabetically, and return new map
-  return new Map(
-    [...weightMap.entries()]
-      .filter(e => e[1] !== 0)
-      .sort()
+    [...valueMap.entries()].sort().filter(e => e[1] !== 0)
   )
 }
 
