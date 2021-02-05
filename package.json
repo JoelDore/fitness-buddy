@@ -1,5 +1,5 @@
 {
-  "name": "fitness-buddy",
+  "name": "gym-buddy",
   "version": "1.0.0",
   "description": "Create, view and track your daily workout routines",
   "main": "server.js",
