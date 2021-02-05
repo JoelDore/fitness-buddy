@@ -13,8 +13,15 @@ router.get('/workouts', (req, res) => {
         })
 })
 
-router.put('/workouts', (req, res) => {
-
+router.put('/workouts/:id', (req, res) => {
+    db.Workout.update({ _id: req.params.id }, { $push: { exercises: req.body } })
+        .then(data => {
+            console.log("1 record updated!")
+            res.json(data)
+        })
+        .catch(err => {
+            res.json(err)
+        })
 })
 
 router.post('/workouts', (req, res) => {
