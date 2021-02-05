@@ -1,0 +1,32 @@
+const express = require('express')
+const logger = require('morgan')
+const mongoose = require('mongoose')
+require('dotenv').config()
+
+const PORT = process.env.PORT || 8080;
+
+const app = express();
+
+app.use(logger('dev'))
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static('public'));
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", {
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true
+});
+
+// Load routes
+const htmlRoutes = require('./routes/html-routes')
+const apiRoutes = require('./routes/api-routes')
+app.use('/', htmlRoutes)
+app.use('/api', apiRoutes)
+
+// Create server
+app.listen(PORT, () => {
+    console.log(` 🌎 Connected! App running on port ${PORT}`)
+});
