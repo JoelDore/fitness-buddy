@@ -22,11 +22,16 @@ function generatePalette() {
 }
 
 function populateChart(data) {
-  let durations = data.map(({ totalDuration }) => totalDuration);
-  let pounds = calculateTotalPounds(data);
-  let exercises = getExerciseNames(data);
-  let totalDurationsMap = getTotalsMap(exercises, durations)
-  let totalWeightsMap = getTotalsMap(exercises, pounds)
+  let totalDurations = data.map(({ totalDuration }) => totalDuration);
+  let totalPounds = calculateTotalPounds(data);
+
+  let durationsByExercise = getStatsByExercise(data, "duration")
+  let poundsByExercise = getStatsByExercise(data, "weight")
+  let exerciseNames = getStatsByExercise(data, "name");
+
+  let totalDurationsMap = getTotalsMap(exerciseNames, durationsByExercise)
+  let totalPoundsMap = getTotalsMap(exerciseNames, poundsByExercise)
+
   const colors = generatePalette();
 
   let line = document.querySelector('#canvas').getContext('2d');
@@ -58,7 +63,7 @@ function populateChart(data) {
           label: 'Workout Duration In Minutes',
           backgroundColor: 'red',
           borderColor: 'red',
-          data: durations,
+          data: totalDurations,
           fill: false,
         },
       ],
@@ -95,8 +100,8 @@ function populateChart(data) {
       labels,
       datasets: [
         {
-          label: 'Pounds',
-          data: pounds,
+          label: 'Total Pounds',
+          data: totalPounds,
           backgroundColor: [
             'rgba(255, 99, 132, 0.2)',
             'rgba(54, 162, 235, 0.2)',
@@ -157,12 +162,12 @@ function populateChart(data) {
   let donutChart = new Chart(pie2, {
     type: 'doughnut',
     data: {
-      labels: [...totalWeightsMap.keys()], // exercise names
+      labels: [...totalPoundsMap.keys()], // exercise names
       datasets: [
         {
           label: 'Exercises Performed',
           backgroundColor: colors,
-          data: [...totalWeightsMap.values()], // pounds
+          data: [...totalPoundsMap.values()], // pounds
         },
       ],
     },
@@ -193,16 +198,16 @@ function calculateTotalPounds(data) {
   return totals;
 }
 
-function getExerciseNames(data) {
-  let exercises = [];
+function getStatsByExercise(data, statName = "") {
+  let stats = [];
 
   data.forEach((workout) => {
     workout.exercises.forEach((exercise) => {
-      exercises.push(exercise.name);
+      stats.push(exercise[statName] || 0)
     });
   });
 
-  return exercises;
+  return stats;
 }
 
 function getTotalsMap(exercises, values) {
