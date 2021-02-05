@@ -15,15 +15,14 @@
 * [Usage](#Usage)  
 * [Technologies](#Technologies-Used)
 * [Contributing](#Contributing)  
-<!-- * [Reflection](#Reflection)   -->
+* [Reflection](#Reflection)  
 * [Future Scope](#Future-Scope)  
 * [Questions](#Questions)
 
 ## Features
 - Create, view and track your daily workout routines
-- Schedule and log multiple exercises on any given day with customizable details
-- 
-- 
+- Add multiple exercises to any given workout with customizable details
+- Visualize stats from your past 7 workouts
 
 ## Installation
 1. Download project by clicking 
@@ -31,29 +30,34 @@
 at the top of this repository, and open project directory in terminal.
 2. Install npm packages: `express`, `mongoose`, `morgan`
     ```
-    npm i
+    npm i express mongoose morgan
     ```
 3. (optional) Prepopulate database with data found in [seed.js](seeders/seed.js) file
     ```
     npm run seed
     ```
-4. 
+4. Run `npm start` and navigate to `localhost:8080` in your browser
 
 ## Usage
-<!-- Currently deployed with [Heroku](https://jd-gym-buddy.herokuapp.com/) -->
+Currently deployed with [Heroku](https://jd-gymbuddy.herokuapp.com/)
 
-1. Start by either creating a new workout or continuing with your most recent workout.
-2. Add one or more custom exercises to your workout plan, and select `Complete` to return home
-3. Select `Dashboard` on the top menu bar to view your fitness stats: 
-    * View the combined weight of multiple exercises from your past 7 workouts
-    * View the total duration of each workout from the past 7 workouts
+1. Start by either creating a new workout or continuing with your most recent workout if you have created one.
+2. Add one or more custom exercises to your workout plan, and select `Complete` to return home.
+3. Select `Dashboard` on the top menu bar to view combined stats from your past 7 workouts: 
+    * View the total duration of each workout
+    * View the total pounds lifted in each workout
+    * View total combined duration/weight for each individual exercise
 
-<!-- ![Demo](./public/assets/demo.gif) -->
+    ![Last Workout Screenshot](public/assets/screenshot-workout.png)
+    ![Add Exercise Screenshot](public/assets/screenshot-exercise.png)
+    ![Stats Screenshot](public/assets/screenshot-stats.png)
 
 ## Technologies Used
 - [Express](https://expressjs.com/)
-- [Mongoose](https://mongoosejs.com/)
 - [Morgan](https://www.npmjs.com/package/morgan)
+- [Mongoose](https://mongoosejs.com/)
+- [MongoDB](https://cloud.mongodb.com/)
+- [Chart.js](https://www.chartjs.org/)
 
 ## Contributing
 Contributions welcome!
@@ -62,10 +66,15 @@ Contributions welcome!
 3. Commit/push your changes  
 4. Create a new pull request  
 
-<!-- ## Reflection
--  -->
+## Reflection
+- Gained experience configuring an app for Heroku deployment with MongoDB Atlas
+- Inadvertantly gained an understanding of [Chart.js](https://www.chartjs.org/):
+    - Discovered issues in provided frontend scripts, so I familiarized myself with the structure and refactored code to manipulate data/display charts correctly.
 
 ## Future Scope
+- Edit previously added exercises
+- Reuse or delete old workouts
+- Schedule future workouts?
 - Create login system for separate user accounts
 
 ## Questions  
